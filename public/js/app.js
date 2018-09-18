@@ -23,3 +23,13 @@ $(".save").on("click", function() {
         window.location = "/"
     })
 });
+
+$(".delete").on("click", function() {
+    var thisId = $(this).attr("data-id");
+    $.ajax({
+        method: "POST",
+        url: "/articles/delete/" + thisId
+    }).done(function(data) {
+        window.location = "/saved"
+    })
+});
