@@ -2,15 +2,13 @@ var express = require("express");
 var bodyParser = require("body-parser");
 var logger = require("morgan");
 var mongoose = require("mongoose");
-//var path = require("path");
 
 
-//var request = require("request");
 var axios = require("axios");
 var cheerio = require("cheerio");
 var db = require("./models")
 var app = express();
-var PORT = 2000;
+var PORT = 4000;
 
 // Use morgan logger for logging requests
 app.use(logger("dev"));
@@ -26,7 +24,7 @@ mongoose.connect("mongodb://localhost/MongoScraper");
 
 console.log("\n***********************************\n" +
             "Grabbing every thread name and link\n" +
-            "from reddit's webdev board:" +
+            "from WebMD:" +
             "\n***********************************\n");
 
 //Scrape data from one site and place it into the mongodb db
