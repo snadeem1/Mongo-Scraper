@@ -15,7 +15,7 @@ var db = require("./models")
 var app = express();
 
 //Define port
-var PORT = process.env.PORT || 2000
+var PORT = process.env.PORT || 3000
 
 // Use morgan logger for logging requests
 app.use(logger("dev"));
@@ -86,8 +86,6 @@ db.Article.create(result)
 
 // If we were able to successfully scrape and save an Article, send a message to the client
 
-  console.log(hbsObject);
-  res.render("home", hbsObject);
 });
   });
 
