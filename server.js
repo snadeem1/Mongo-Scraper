@@ -4,8 +4,8 @@ var logger = require("morgan");
 var mongoose = require("mongoose");
 var path = require("path");
 
-var Note = require("./models/Note.js");
-var Article = require("./models/Article.js");
+//var Note = require("./models/Note.js");
+//var Article = require("./models/Article.js");
 
 //var request = require("request");
 var axios = require("axios");
@@ -31,11 +31,21 @@ partialsDir: path.join(__dirname, "/views/layouts/partials")
 app.set("view engine", "handlebars");
 // Connect to the Mongo DB
 // mongoose.connect("mongodb://localhost/MongoScraper");
+mongoose.connect("mongodb://snadeem:gwbootcamp1@ds161312.mlab.com:61312/heroku_vkbz8fcc");
+var connection = mongoose.connection;
+connection.on("error", function(error) {
+  console.log("Mongoose Error: ", error);
+});
+
+// Once logged in to the db through mongoose, log a success message
+connection.once("open", function() {
+  console.log("Mongoose connection successful.");
+});
+
 var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/MongoScraper";
 mongoose.Promise = Promise;
 mongoose.connect(MONGODB_URI);
 
-mongoose.connect("mongodb://snadeem:gwbootcamp1@ds161312.mlab.com:61312/heroku_vkbz8fcc");
 
 console.log("\n***********************************\n" +
             "Grabbing every thread name and link\n" +
