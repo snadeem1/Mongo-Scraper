@@ -32,15 +32,15 @@ app.set("view engine", "handlebars");
 // Connect to the Mongo DB
 // mongoose.connect("mongodb://localhost/MongoScraper");
 mongoose.connect("mongodb://heroku_vkbz8fcc:2lfqguqsgc6hl9ep5a0edohd1o@ds161312.mlab.com:61312/heroku_vkbz8fcc");
-var connection = mongoose.connection;
-connection.on("error", function(error) {
-  console.log("Mongoose Error: ", error);
-});
+// var connection = mongoose.connection;
+// connection.on("error", function(error) {
+//   console.log("Mongoose Error: ", error);
+// });
 
 // Once logged in to the db through mongoose, log a success message
-connection.once("open", function() {
-  console.log("Mongoose connection successful.");
-});
+// connection.once("open", function() {
+//   console.log("Mongoose connection successful.");
+// });
 
 var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/MongoScraper";
 mongoose.Promise = Promise;
