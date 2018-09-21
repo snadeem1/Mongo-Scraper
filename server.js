@@ -2,7 +2,7 @@ var express = require("express");
 var bodyParser = require("body-parser");
 var logger = require("morgan");
 var mongoose = require("mongoose");
-//var path = require("path");
+var path = require("path");
 
 var Note = require("./models/Note.js");
 var Article = require("./models/Article.js");
@@ -25,12 +25,17 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 // Set Handlebars.
 var exphbs = require("express-handlebars");
-app.engine("handlebars", exphbs({ defaultLayout: "main" }));
+app.engine("handlebars", exphbs({ defaultLayout: "main",
+partialsDir: path.join(__dirname, "/views/layouts/partials")
+ }));
 app.set("view engine", "handlebars");
 // Connect to the Mongo DB
-mongoose.connect("mongodb://localhost/MongoScraper");
+// mongoose.connect("mongodb://localhost/MongoScraper");
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/MongoScraper";
+mongoose.Promise = Promise;
+mongoose.connect(MONGODB_URI);
 
-
+mongoose.connect("mongodb://snadeem:gwbootcamp1@ds161312.mlab.com:61312/heroku_vkbz8fcc");
 
 console.log("\n***********************************\n" +
             "Grabbing every thread name and link\n" +
@@ -48,13 +53,18 @@ console.log("\n***********************************\n" +
       res.render("home",{article: data});
     });
   });
+
   app.get("/saved", function(req, res) {
     db.Article.find({"saved": true}, function(error, data) {
 
+      // app.get("/saved", function(req, res) {
+      //   db.Article.find({"saved": true}).populate("notes").then(function(error, data) {
       console.log(data);
       res.render("saved",{article: data});
     });
   });
+
+  
 
   app.get("/scrape", function(req, res) { 
   axios.get("https://www.webmd.com/news/articles").then(function(response) {
@@ -111,7 +121,7 @@ app.get("/articles", function(req, res) {
     // Using the id passed in the id parameter, prepare a query that finds the matching one in our db...
     db.Article.findOne({ _id: req.params.id })
       // ..and populate all of the notes associated with it
-      .populate("note")
+      .populate("notes")
       .then(function(dbArticle) {
         // If we were able to successfully find an Article with the given id, send it back to the client
         res.json(dbArticle);
@@ -158,7 +168,42 @@ app.post("/articles/delete/:id", function(req, res) {
     });
   });
 
-
+  // Create a new note
+  app.post("/notes/save/:id", function(req, res) {
+    // Create a new note and pass the req.body to the entry
+    console.log('request here', req)
+    var newNote = new Note({
+      body: req.body.text,
+      article: req.params.id
+    });
+    console.log(req.body.text)
+    // And save the new note the db
+    // newNote.save(function(error, notes) {
+      // Log any errors
+      // if (error) {
+        // console.log(error);
+      // }
+      // Otherwise
+      // else {
+        // Use the article id to find and update it's notes {$push: {friends: friend}}
+        
+        db.Article.findOneAndUpdate({ "_id": req.params.id }, {$push: { notes: newNote } }, { new : true })
+        // Execute the above query
+        .then(function(err) {
+          // Log any errors
+          if (err) {
+            console.log(err);
+            res.send(err);
+          }
+          else {
+            // Or send the note to the browser
+            console.log('notes here', notes);
+            res.send(notes);
+          }
+        });
+      })
+    // });
+  // });
 
 
   // Start the server
