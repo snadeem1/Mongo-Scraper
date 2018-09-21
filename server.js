@@ -31,7 +31,7 @@ partialsDir: path.join(__dirname, "/views/layouts/partials")
 app.set("view engine", "handlebars");
 // Connect to the Mongo DB
 // mongoose.connect("mongodb://localhost/MongoScraper");
-mongoose.connect("mongodb://snadeem:gwbootcamp1@ds161312.mlab.com:61312/heroku_vkbz8fcc");
+mongoose.connect("mongodb://heroku_vkbz8fcc:2lfqguqsgc6hl9ep5a0edohd1o@ds161312.mlab.com:61312/heroku_vkbz8fcc");
 var connection = mongoose.connection;
 connection.on("error", function(error) {
   console.log("Mongoose Error: ", error);
