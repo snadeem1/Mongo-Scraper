@@ -182,40 +182,52 @@ app.post("/articles/delete/:id", function(req, res) {
 
   // Create a new note
   app.post("/notes/save/:id", function(req, res) {
-    // Create a new note and pass the req.body to the entry
-    //console.log('request here', req)
-    var newNote = new Note({
-      body: req.body.text,
-      article: req.params.id
+    db.Note.create(req.body)
+    .then(function(dbNote) {
+      return db.Article.findOneAndUpdate({}, { $push: { notes: dbNote._id } }, { new: true });
+    })
+    .then(function(dbArticle) {
+      res.json(dbArticle);
+    })
+    .catch(function(err) {
+      // If an error occurs, send it back to the client
+      res.json(err);
     });
-   // console.log(req.body.text)
-    // And save the new note the db
-    newNote.save(function(error, note) {
-      //Log any errors
-      if (error) {
-        console.log(error);
-      }
-      // Otherwise
-      // else {
-        // Use the article id to find and update it's notes {$push: {friends: friend}}
+});
+  //   // Create a new note and pass the req.body to the entry
+  //   //console.log('request here', req)
+  //   var newNote = new Note({
+  //     body: req.body.text,
+  //     article: req.params.id
+  //   });
+  //  // console.log(req.body.text)
+  //   // And save the new note the db
+  //   newNote.save(function(error, note) {
+  //     //Log any errors
+  //     if (error) {
+  //       console.log(error);
+  //     }
+  //     // Otherwise
+  //     // else {
+  //       // Use the article id to find and update it's notes {$push: {friends: friend}}
         
-        db.Article.findOneAndUpdate({ "_id": req.params.id }, {$push: { "notes": note } })
-        // Execute the above query
-        .then(function(err) {
-          // Log any errors
-          if (err) {
-            console.log(err);
-            res.send(err);
-          }
-          else {
-            // Or send the note to the browser
-            console.log('notes here', notes);
-            res.send(note);
-          }
-        });
-      })
-    });
-  // });
+  //       db.Article.findOneAndUpdate({ "_id": req.params.id }, {$push: { "notes": note } })
+  //       // Execute the above query
+  //       .then(function(err) {
+  //         // Log any errors
+  //         if (err) {
+  //           console.log(err);
+  //           res.send(err);
+  //         }
+  //         else {
+  //           // Or send the note to the browser
+  //           console.log('notes here', notes);
+  //           res.send(note);
+  //         }
+  //       });
+  //     })
+  //   });
+  // // });
 
 
   app.delete("/notes/delete/:note_id/:article_id", function(req, res) {

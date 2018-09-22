@@ -1,9 +1,9 @@
-$("#scrape").on("click", function() {
+$(".scrape").on("click", function() {
     $.ajax({
         method: "GET",
         url: "/scrape",
     }).done(function(data) {
-        console.log(data)
+        //console.log(data)
           res.render("home",{article: data});
         window.location = "/"
     })
