@@ -13,6 +13,7 @@ var cheerio = require("cheerio");
 var request = require("request");
 var db = require("./models")
 var app = express();
+mongoose.Promise = Promise;
 
 //Define port
 var PORT = process.env.PORT || 3000
@@ -30,8 +31,9 @@ partialsDir: path.join(__dirname, "/views/layouts/partials")
  }));
 app.set("view engine", "handlebars");
 // Connect to the Mongo DB
-// mongoose.connect("mongodb://localhost/MongoScraper");
 mongoose.connect("mongodb://heroku_vkbz8fcc:2lfqguqsgc6hl9ep5a0edohd1o@ds161312.mlab.com:61312/heroku_vkbz8fcc");
+
+// mongoose.connect("mongodb://localhost/MongoScraper");
 // var connection = mongoose.connection;
 // connection.on("error", function(error) {
 //   console.log("Mongoose Error: ", error);
@@ -43,7 +45,7 @@ mongoose.connect("mongodb://heroku_vkbz8fcc:2lfqguqsgc6hl9ep5a0edohd1o@ds161312.
 // });
 
 var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/MongoScraper";
-mongoose.Promise = Promise;
+
 mongoose.connect(MONGODB_URI);
 
 
